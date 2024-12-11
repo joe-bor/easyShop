@@ -148,6 +148,8 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         }
         catch (SQLException e)
         {
+            System.out.println("e.getStackTrace() = " + e.getMessage());
+
             throw new RuntimeException(e);
         }
         return null;

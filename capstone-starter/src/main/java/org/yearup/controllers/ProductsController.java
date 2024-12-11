@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.yearup.data.mysql.MySqlProductDao;
 import org.yearup.models.Product;
 import org.yearup.data.ProductDao;
 
@@ -19,12 +20,12 @@ public class ProductsController
     private ProductDao productDao;
 
     @Autowired
-    public ProductsController(ProductDao productDao)
+    public ProductsController(MySqlProductDao mySqlProductDao)
     {
-        this.productDao = productDao;
+        this.productDao = mySqlProductDao;
     }
 
-    @GetMapping("")
+    @GetMapping
     @PreAuthorize("permitAll()")
     public List<Product> search(@RequestParam(name="cat", required = false) Integer categoryId,
                                 @RequestParam(name="minPrice", required = false) BigDecimal minPrice,

@@ -1,5 +1,7 @@
 package org.yearup.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Category
 {
     private int categoryId;

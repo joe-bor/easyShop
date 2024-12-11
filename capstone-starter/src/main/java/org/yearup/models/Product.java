@@ -1,5 +1,7 @@
 package org.yearup.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class Product
@@ -119,5 +121,21 @@ public class Product
     public void setImageUrl(String imageUrl)
     {
         this.imageUrl = imageUrl;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", categoryId=" + categoryId +
+                ", description='" + description + '\'' +
+                ", color='" + color + '\'' +
+                ", stock=" + stock +
+                ", isFeatured=" + isFeatured +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }

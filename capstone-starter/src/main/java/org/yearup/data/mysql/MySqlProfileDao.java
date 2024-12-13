@@ -21,6 +21,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
 
         try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
             ps.setInt(1, profile.getUserId());
             ps.setString(2, profile.getFirstName());
             ps.setString(3, profile.getLastName());
@@ -40,7 +41,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
     }
 
     @Override
-    public Profile getProfile(int userId) {
+    public Profile getProfileById(int userId) {
         String sql = """
                 SELECT *
                 FROM profiles
@@ -70,5 +71,40 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public Profile updateProfile(int userId, Profile profile) {
+        String sql = """
+                UPDATE profiles
+                SET first_name = ?,
+                last_name = ?,
+                phone = ?,
+                email = ?,
+                address = ?,
+                city = ?,
+                state = ?,
+                zip = ?
+                WHERE user_id = ?
+                """;
+
+        try (Connection connection = getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, profile.getFirstName());
+            ps.setString(2, profile.getLastName());
+            ps.setString(3, profile.getPhone());
+            ps.setString(4, profile.getEmail());
+            ps.setString(5, profile.getAddress());
+            ps.setString(6, profile.getCity());
+            ps.setString(7, profile.getState());
+            ps.setString(8, profile.getZip());
+            ps.setInt(9, userId);
+            ps.executeUpdate();
+
+            return getProfileById(userId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

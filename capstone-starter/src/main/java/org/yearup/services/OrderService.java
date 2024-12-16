@@ -23,7 +23,6 @@ public class OrderService {
     private OrderLineDAO orderLineDAO;
     private ProfileDao profileDao;
     private ShoppingCartDao shoppingCartDao;
-    @Getter
     private EmailService emailService;
 
     /**

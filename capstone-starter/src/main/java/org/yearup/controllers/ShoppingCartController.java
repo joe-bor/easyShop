@@ -22,6 +22,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("cart")
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+@CrossOrigin
 public class ShoppingCartController {
     // a shopping cart requires
     private ShoppingCartDao shoppingCartDao;
@@ -106,10 +107,7 @@ public class ShoppingCartController {
             int userId = user.getId();
 
             ShoppingCart shoppingCart = this.shoppingCartDao.clearCart(userId);
-
-            return ResponseEntity
-                    .status(HttpStatus.NO_CONTENT)
-                    .body(shoppingCart);
+            return ResponseEntity.ok(shoppingCart);
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");

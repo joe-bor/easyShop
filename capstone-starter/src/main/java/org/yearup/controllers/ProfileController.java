@@ -14,6 +14,7 @@ import java.security.Principal;
 @AllArgsConstructor
 @RequestMapping("profile")
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+@CrossOrigin
 public class ProfileController {
 
     LoggedInUser loggedInUser;

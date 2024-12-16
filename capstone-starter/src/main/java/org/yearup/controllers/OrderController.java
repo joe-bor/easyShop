@@ -12,6 +12,7 @@ import org.yearup.data.ProfileDao;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.models.*;
 import org.yearup.services.EmailService;
+import org.yearup.services.OrderService;
 import org.yearup.utils.LoggedInUser;
 
 import java.security.Principal;
@@ -24,48 +25,11 @@ import java.security.Principal;
 public class OrderController {
 
     private LoggedInUser loggedInUser;
-    private OrderDao orderDao;
-    private OrderLineDAO orderLineDAO;
-    private ProfileDao profileDao;
-    private ShoppingCartDao shoppingCartDao;
-    private EmailService emailService;
+    private OrderService orderService;
 
     @PostMapping
     public void checkout(Principal principal) {
-        // using the user id
-        // fetch user profile
-        // fetch the cart
-        // transform cart items to order items
-        // transform cart to order: by appending details from profile
         int userId = this.loggedInUser.getUserId(principal);
-        Profile profile = profileDao.getProfileById(userId);
-        ShoppingCart shoppingCart = shoppingCartDao.getByUserId(userId);
-
-        // Order object populated with the user details from Profile && current time && order total
-        Order order = this.orderDao.checkout(userId, profile, shoppingCart);
-
-        // transform cart items to order items and populate associated table in db
-        for (ShoppingCartItem shoppingCartItem : shoppingCart.getItems().values()) {
-            OrderLineItem orderLineItem = new OrderLineItem();
-            orderLineItem.setOrderId(order.getOrderId());
-            orderLineItem.setProductId(shoppingCartItem.getProductId());
-            orderLineItem.setSalePrice(shoppingCartItem.getLineTotal());
-            orderLineItem.setQuantity(shoppingCartItem.getQuantity());
-            orderLineItem.setDiscount(shoppingCartItem.getDiscountPercent());
-
-            // insert to db
-            OrderLineItem orderLineFromDb = this.orderLineDAO.createOrderLine(orderLineItem);
-        }
-
-        // send email
-        int orderNumber = order.getOrderId();
-        this.emailService.sendEmail(
-                profile.getEmail(),
-                "Order Number: " + orderNumber,
-                "Thank you for your purchase");
-
-
-        // empty the cart
-        this.shoppingCartDao.clearCart(userId);
+        this.orderService.checkout(userId);
     }
 }

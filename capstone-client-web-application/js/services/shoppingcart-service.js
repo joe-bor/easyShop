@@ -81,7 +81,7 @@ class ShoppingCartService {
 
     const checkoutButton = document.createElement("checkout");
     checkoutButton.classList.add("btn");
-    checkoutButton.classList.add("btn-success");
+    checkoutButton.classList.add("btn-info");
     checkoutButton.innerText = "Checkout";
     checkoutButton.addEventListener("click", () => this.checkout());
     cartHeader.appendChild(checkoutButton);
@@ -181,7 +181,7 @@ class ShoppingCartService {
     axios
       .post(url)
       .then((response) => {
-        console.log(response.data); // TODO: check
+        console.log(response.data);
         this.clearCart();
       })
       .catch((error) => {

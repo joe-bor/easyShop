@@ -11,6 +11,7 @@ import org.yearup.data.OrderLineDAO;
 import org.yearup.data.ProfileDao;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.models.*;
+import org.yearup.services.EmailService;
 import org.yearup.utils.LoggedInUser;
 
 import java.security.Principal;
@@ -23,18 +24,19 @@ import java.security.Principal;
 public class OrderController {
 
     private LoggedInUser loggedInUser;
-    OrderDao orderDao;
-    OrderLineDAO orderLineDAO;
-    ProfileDao profileDao;
-    ShoppingCartDao shoppingCartDao;
+    private OrderDao orderDao;
+    private OrderLineDAO orderLineDAO;
+    private ProfileDao profileDao;
+    private ShoppingCartDao shoppingCartDao;
+    private EmailService emailService;
 
     @PostMapping
-    public void checkout(Principal principal){
+    public void checkout(Principal principal) {
         // using the user id
-            // fetch user profile
-            // fetch the cart
-                // transform cart items to order items
-            // transform cart to order: by appending details from profile
+        // fetch user profile
+        // fetch the cart
+        // transform cart items to order items
+        // transform cart to order: by appending details from profile
         int userId = this.loggedInUser.getUserId(principal);
         Profile profile = profileDao.getProfileById(userId);
         ShoppingCart shoppingCart = shoppingCartDao.getByUserId(userId);
@@ -55,6 +57,15 @@ public class OrderController {
             OrderLineItem orderLineFromDb = this.orderLineDAO.createOrderLine(orderLineItem);
         }
 
+        // send email
+        int orderNumber = order.getOrderId();
+        this.emailService.sendEmail(
+                profile.getEmail(),
+                "Order Number: " + orderNumber,
+                "Thank you for your purchase");
+
+
+        // empty the cart
         this.shoppingCartDao.clearCart(userId);
     }
 }

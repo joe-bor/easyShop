@@ -1,128 +1,113 @@
-
-function showLoginForm()
-{
-    templateBuilder.build('login-form', {}, 'login');
+function showLoginForm() {
+  templateBuilder.build("login-form", {}, "login");
 }
 
-function hideModalForm()
-{
-    templateBuilder.clear('login');
+function hideModalForm() {
+  templateBuilder.clear("login");
 }
 
-function login()
-{
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    userService.login(username, password);
-    hideModalForm()
+function oAuthLogin() {
+  console.log("calling: http://localhost:8080/oauth2/authorization/github");
+  userService.oAuthLogin();
 }
 
-function showImageDetailForm(product, imageUrl)
-{
-    const imageDetail = {
-        name: product,
-        imageUrl: imageUrl
-    };
+function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
-    templateBuilder.build('image-detail',imageDetail,'login')
+  userService.login(username, password);
+  hideModalForm();
 }
 
-function loadHome()
-{
-    templateBuilder.build('home',{},'main')
+function showImageDetailForm(product, imageUrl) {
+  const imageDetail = {
+    name: product,
+    imageUrl: imageUrl,
+  };
 
-    productService.search();
-    categoryService.getAllCategories(loadCategories);
+  templateBuilder.build("image-detail", imageDetail, "login");
 }
 
-function editProfile()
-{
-    profileService.loadProfile();
+function loadHome() {
+  templateBuilder.build("home", {}, "main");
+
+  productService.search();
+  categoryService.getAllCategories(loadCategories);
 }
 
-function saveProfile()
-{
-    const firstName = document.getElementById("firstName").value;
-    const lastName = document.getElementById("lastName").value;
-    const phone = document.getElementById("phone").value;
-    const email = document.getElementById("email").value;
-    const address = document.getElementById("address").value;
-    const city = document.getElementById("city").value;
-    const state = document.getElementById("state").value;
-    const zip = document.getElementById("zip").value;
-
-    const profile = {
-        firstName,
-        lastName,
-        phone,
-        email,
-        address,
-        city,
-        state,
-        zip
-    };
-
-    profileService.updateProfile(profile);
+function editProfile() {
+  profileService.loadProfile();
 }
 
-function showCart()
-{
-    cartService.loadCartPage();
+function saveProfile() {
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+  const address = document.getElementById("address").value;
+  const city = document.getElementById("city").value;
+  const state = document.getElementById("state").value;
+  const zip = document.getElementById("zip").value;
+
+  const profile = {
+    firstName,
+    lastName,
+    phone,
+    email,
+    address,
+    city,
+    state,
+    zip,
+  };
+
+  profileService.updateProfile(profile);
 }
 
-function clearCart()
-{
-    cartService.clearCart();
-    cartService.loadCartPage();
+function showCart() {
+  cartService.loadCartPage();
 }
 
-function setCategory(control)
-{
-    productService.addCategoryFilter(control.value);
-    productService.search();
-
+function clearCart() {
+  cartService.clearCart();
+  cartService.loadCartPage();
 }
 
-function setColor(control)
-{
-    productService.addColorFilter(control.value);
-    productService.search();
-
+function setCategory(control) {
+  productService.addCategoryFilter(control.value);
+  productService.search();
 }
 
-function setMinPrice(control)
-{
-    // const slider = document.getElementById("min-price");
-    const label = document.getElementById("min-price-display")
-    label.innerText = control.value;
-
-    const value = control.value != 0 ? control.value : "";
-    productService.addMinPriceFilter(value)
-    productService.search();
-
+function setColor(control) {
+  productService.addColorFilter(control.value);
+  productService.search();
 }
 
-function setMaxPrice(control)
-{
-    // const slider = document.getElementById("min-price");
-    const label = document.getElementById("max-price-display")
-    label.innerText = control.value;
+function setMinPrice(control) {
+  // const slider = document.getElementById("min-price");
+  const label = document.getElementById("min-price-display");
+  label.innerText = control.value;
 
-    const value = control.value != 1500 ? control.value : "";
-    productService.addMaxPriceFilter(value)
-    productService.search();
-
+  const value = control.value != 0 ? control.value : "";
+  productService.addMinPriceFilter(value);
+  productService.search();
 }
 
-function closeError(control)
-{
-    setTimeout(() => {
-        control.click();
-    },3000);
+function setMaxPrice(control) {
+  // const slider = document.getElementById("min-price");
+  const label = document.getElementById("max-price-display");
+  label.innerText = control.value;
+
+  const value = control.value != 1500 ? control.value : "";
+  productService.addMaxPriceFilter(value);
+  productService.search();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function closeError(control) {
+  setTimeout(() => {
+    control.click();
+  }, 3000);
+}
 
-    loadHome();
+document.addEventListener("DOMContentLoaded", () => {
+  loadHome();
 });

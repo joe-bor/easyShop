@@ -40,7 +40,7 @@ public class OrderService {
 
         toOrderLineItems(shoppingCart.getItems().values(), order);
 
-        emailOrderSummary(profile, order.getOrderId(), shoppingCart);
+        emailOrderSummary(profile, order.getOrderId(), shoppingCart); // TODO: turn this async, can be called right after we get the order object back
 
         // empty the cart
         this.shoppingCartDao.clearCart(userId);
@@ -64,7 +64,7 @@ public class OrderService {
      * and associates them with the specified order.
      *
      * @param shoppingCartItemCollection the collection of shopping cart items to transform.
-     * @param order                      the order to associate the line items with.
+     * @param order the order to associate the line items with.
      */
     private void toOrderLineItems(Collection<ShoppingCartItem> shoppingCartItemCollection, Order order) {
 

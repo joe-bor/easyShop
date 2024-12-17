@@ -14,10 +14,14 @@ public class LoggedInUser {
     private UserDao userDao;
 
     public int getUserId(Principal principal) {
-        String userName = principal.getName();
-        // find database user by userId
-        User user = userDao.getByUserName(userName);
-        return user.getId();
+        try {
+            String userName = principal.getName();
+            // find database user by userId
+            User user = userDao.getByUserName(userName);
+            return user.getId();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

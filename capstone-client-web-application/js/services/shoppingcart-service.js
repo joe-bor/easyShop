@@ -16,6 +16,12 @@ class ShoppingCartService {
         this.setCart(response.data);
 
         this.updateCartDisplay();
+
+        const data = {
+          message: `Product# ${productId} added to cart `,
+        };
+
+        templateBuilder.append("message", data, "errors");
       })
       .catch((error) => {
         const data = {
@@ -80,18 +86,22 @@ class ShoppingCartService {
     cartHeader.appendChild(h1);
 
     const checkoutButton = document.createElement("button");
-    checkoutButton.classList.add("btn");
-    checkoutButton.classList.add("btn-success");
+    checkoutButton.classList.add(
+      "btn",
+      "btn-success",
+      "w-50",
+      "mt-3",
+      "py-2",
+      "px-4"
+    );
     checkoutButton.innerText = "Checkout";
     checkoutButton.addEventListener("click", () => this.checkout());
-    // cartHeader.appendChild(checkoutButton);
 
     const button = document.createElement("button");
     button.classList.add("btn");
     button.classList.add("btn-danger");
     button.innerText = "Clear";
     button.addEventListener("click", () => this.clearCart());
-    cartHeader.appendChild(button);
 
     contentDiv.appendChild(cartHeader);
     main.appendChild(contentDiv);
@@ -103,6 +113,7 @@ class ShoppingCartService {
 
     if (this.cart.items.length > 0) {
       contentDiv.appendChild(checkoutButton);
+      cartHeader.appendChild(button);
     }
   }
 
@@ -160,6 +171,12 @@ class ShoppingCartService {
 
         this.updateCartDisplay();
         this.loadCartPage();
+
+        const data = {
+          message: "Cart Cleared.",
+        };
+
+        templateBuilder.append("message", data, "errors");
       })
       .catch((error) => {
         const data = {
@@ -187,6 +204,12 @@ class ShoppingCartService {
       .then((response) => {
         console.log(response.data);
         this.clearCart();
+
+        const data = {
+          message: "Checkout Successful.",
+        };
+
+        templateBuilder.append("message", data, "errors");
       })
       .catch((error) => {
         const data = {

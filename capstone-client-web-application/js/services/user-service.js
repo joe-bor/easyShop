@@ -122,11 +122,6 @@ class UserService {
       });
   }
 
-  oAuthLogin() {
-    const url = `${config.baseUrl}/oauth2`;
-    axios.get(url).then((response) => console.log(response.data));
-  }
-
   logout() {
     localStorage.removeItem("user");
     axios.defaults.headers.common = {
@@ -144,3 +139,32 @@ document.addEventListener("DOMContentLoaded", () => {
   userService = new UserService();
   userService.setHeaderLogin();
 });
+
+window.onload = function () {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get("token");
+  const userJson = params.get("user");
+
+  if (token && userJson) {
+    try {
+      const user = JSON.parse(decodeURIComponent(userJson));
+
+      const userData = {
+        token: token,
+        user: {
+          id: user.id,
+          username: user.username,
+          authorities: [{ name: user.authorities[0].name }],
+        },
+      };
+
+      userService.saveUser(userData);
+
+      window.location.href = "/index.html";
+    } catch (error) {
+      console.error("Failed to parse user data:", error);
+    }
+  } else {
+    console.error("Authentication failed or token/user not found");
+  }
+};

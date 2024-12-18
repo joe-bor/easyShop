@@ -1,5 +1,7 @@
 package org.yearup.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,11 @@ import org.yearup.models.authentication.LoginResponseDto;
 import org.yearup.security.jwt.JWTFilter;
 import org.yearup.security.jwt.TokenProvider;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 
 @RestController
 @RequestMapping("/oauth2")
@@ -36,12 +43,12 @@ public class OAuth2Controller {
     private UserDao userDao;
 
     @GetMapping("/success")
-    public ResponseEntity<LoginResponseDto> success(@AuthenticationPrincipal OAuth2User oAuth2User) {
+    public ResponseEntity<LoginResponseDto> success(@AuthenticationPrincipal OAuth2User oAuth2User) throws JsonProcessingException, UnsupportedEncodingException {
         /*
         - verify existence of user
         - if not found: register
         - login
-        - create jwt and send it back
+        - create jwt and send it back through url params
          */
         User user = createUserIfNotExist(oAuth2User);
 
@@ -58,11 +65,17 @@ public class OAuth2Controller {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = this.tokenProvider.createToken(authentication, false);
+        String jwt = tokenProvider.createToken(authentication, false);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
+        String userJson = new ObjectMapper().writeValueAsString(user);
+
+        String frontendRedirectUrl = "http://127.0.0.1:5500/index.html?token=" + jwt + "&user=" + URLEncoder.encode(userJson, StandardCharsets.UTF_8);
+
+        // redirect
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, frontendRedirectUrl)
+                .build();
+
     }
 
     @GetMapping("/failure")

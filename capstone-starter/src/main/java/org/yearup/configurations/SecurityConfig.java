@@ -43,8 +43,7 @@ public class SecurityConfig {
 
                 .and()
                 .oauth2Login()
-//                .defaultSuccessUrl("http://localhost:8080/oauth2/success")
-                .defaultSuccessUrl("http://127.0.0.1:5500/index.html", true)
+                .defaultSuccessUrl("http://localhost:8080/oauth2/success", true)
                 .failureUrl("/oauth2/failure");
 
         return http.build();

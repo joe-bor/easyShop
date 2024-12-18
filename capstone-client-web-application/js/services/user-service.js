@@ -123,7 +123,7 @@ class UserService {
   }
 
   oAuthLogin() {
-    const url = `${config.baseUrl}/oauth`;
+    const url = `${config.baseUrl}/oauth2`;
     axios.get(url).then((response) => console.log(response.data));
   }
 

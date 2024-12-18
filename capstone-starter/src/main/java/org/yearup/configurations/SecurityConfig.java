@@ -36,10 +36,16 @@ public class SecurityConfig {
 
                 .and()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
 
                 .and()
-                .apply(new JWTConfigurer(tokenProvider));
+                .apply(new JWTConfigurer(tokenProvider))
+
+                .and()
+                .oauth2Login()
+//                .defaultSuccessUrl("http://localhost:8080/oauth2/success")
+                .defaultSuccessUrl("http://127.0.0.1:5500/index.html", true)
+                .failureUrl("/oauth2/failure");
 
         return http.build();
     }

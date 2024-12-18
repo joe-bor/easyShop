@@ -7,7 +7,6 @@ function hideModalForm() {
 }
 
 function oAuthLogin() {
-  console.log("calling: http://localhost:8080/oauth2/authorization/github");
   userService.oAuthLogin();
 }
 

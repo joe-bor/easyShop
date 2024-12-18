@@ -79,12 +79,12 @@ class ShoppingCartService {
     h1.innerText = "Cart";
     cartHeader.appendChild(h1);
 
-    const checkoutButton = document.createElement("checkout");
+    const checkoutButton = document.createElement("button");
     checkoutButton.classList.add("btn");
-    checkoutButton.classList.add("btn-info");
+    checkoutButton.classList.add("btn-success");
     checkoutButton.innerText = "Checkout";
     checkoutButton.addEventListener("click", () => this.checkout());
-    cartHeader.appendChild(checkoutButton);
+    // cartHeader.appendChild(checkoutButton);
 
     const button = document.createElement("button");
     button.classList.add("btn");
@@ -100,6 +100,10 @@ class ShoppingCartService {
     this.cart.items.forEach((item) => {
       this.buildItem(item, contentDiv);
     });
+
+    if (this.cart.items.length > 0) {
+      contentDiv.appendChild(checkoutButton);
+    }
   }
 
   buildItem(item, parent) {
@@ -178,7 +182,7 @@ class ShoppingCartService {
   checkout() {
     const url = `${config.baseUrl}/orders`;
 
-    axios
+    axios //fetch()
       .post(url)
       .then((response) => {
         console.log(response.data);

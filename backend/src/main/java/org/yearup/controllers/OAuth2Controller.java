@@ -22,11 +22,9 @@ import org.yearup.data.UserDao;
 import org.yearup.models.Profile;
 import org.yearup.models.User;
 import org.yearup.models.authentication.LoginResponseDto;
-import org.yearup.security.jwt.JWTFilter;
 import org.yearup.security.jwt.TokenProvider;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -43,13 +41,14 @@ public class OAuth2Controller {
     private UserDao userDao;
 
     @GetMapping("/success")
-    public ResponseEntity<LoginResponseDto> success(@AuthenticationPrincipal OAuth2User oAuth2User) throws JsonProcessingException, UnsupportedEncodingException {
+    public ResponseEntity<LoginResponseDto> success(@AuthenticationPrincipal OAuth2User oAuth2User) throws JsonProcessingException {
         /*
         - verify existence of user
         - if not found: register
         - login
         - create jwt and send it back through url params
          */
+
         User user = createUserIfNotExist(oAuth2User);
 
         Profile profile = createProfile(oAuth2User);
